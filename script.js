@@ -52,7 +52,46 @@ if(menuToggle) {
     });
 }
 
-// Form Submission handled natively inside index.html via action target
+// Form Submission handling (using FormSubmit real email delivery via AJAX)
+const contactForm = document.getElementById('contactForm');
+if(contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const btn = contactForm.querySelector('button');
+        const originalText = btn.innerText;
+        btn.innerText = "Sending...";
+        
+        const formData = new FormData(contactForm);
+
+        fetch("https://formsubmit.co/ajax/arivukkarasan@gmail.com", {
+            method: "POST",
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            btn.innerText = "Message Sent Successfully!";
+            btn.style.background = "#5BC0BE";
+            btn.style.color = "#0B0F19";
+            setTimeout(() => {
+                contactForm.reset();
+                btn.innerText = originalText;
+                btn.style.background = "";
+                btn.style.color = "";
+            }, 4000);
+        })
+        .catch(error => {
+            btn.innerText = "Error! Please try again.";
+            btn.style.background = "#EF4444";
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.background = "";
+            }, 4000);
+        });
+    });
+}
 
 // --- Neural Network Canvas Background Effect ---
 const canvas = document.getElementById('neuralCanvas');
